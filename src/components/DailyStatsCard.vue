@@ -137,7 +137,7 @@ const rerenderKey = computed(() => `${props.currentSession?.domain}-${Date.now()
 </script>
 
 <template>
-  <div v-if="dayData" class="mx-auto w-full md:max-w-2xl rounded-lg bg-white md:p-6 md:shadow-xl dark:bg-dark md:dark:border md:dark:border-gray-600">
+  <div class="mx-auto w-full md:max-w-2xl rounded-lg bg-white md:p-6 md:shadow-xl dark:bg-dark md:dark:border md:dark:border-gray-600">
     <div class="mb-6 flex flex-wrap text-left gap-x-10 items-center justify-between border-b pb-4 dark:border-gray-700">
       <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 md:text-3xl">
         Daily Usage Report
@@ -149,7 +149,7 @@ const rerenderKey = computed(() => `${props.currentSession?.domain}-${Date.now()
       <div>
         <CurrentSiteDetails :key="rerenderKey" :site="currentSession" :tab-visited-time="tabVisitedTime" />
       </div>
-      <div v-if="Object.keys(dayData.sites).length > 0">
+      <div v-if="dayData && Object.keys(dayData.sites).length > 0">
         <h3 class="text-lg text-left font-semibold text-gray-900 dark:text-gray-100">
           Top Sites Today
         </h3>
@@ -159,14 +159,6 @@ const rerenderKey = computed(() => `${props.currentSession?.domain}-${Date.now()
           @period-change="handlePeriodChange"
         />
       </div>
-      <div v-else>
-        <p class="text-gray-600 dark:text-gray-400">
-          No website activity recorded for this day.
-        </p>
-      </div>
     </div>
-  </div>
-  <div v-else class="text-center text-gray-500">
-    <p>No daily statistics available.</p>
   </div>
 </template>
