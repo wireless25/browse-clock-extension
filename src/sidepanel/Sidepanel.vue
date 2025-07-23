@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { currentTabStartTime, isChromeFocused, timeTrackerData } from '~/logic/storage'
+import { currentTabStartTime, isChromeFocused, timeTrackerData, today } from '~/logic/storage'
 import DailyStatsCard from '~/components/DailyStatsCard.vue'
 import { useRunningClock } from '~/composables/useRunningClick'
 import { applyTheme, prefersDarkMode } from '~/logic/common-setup'
@@ -23,8 +23,8 @@ prefersDarkMode.addEventListener('change', mql => applyTheme(mql))
   <main class="w-full min-h-dvh px-4 py-5 text-center md:bg-gray-50 dark:bg-dark text-gray-700">
     <div class="mt-2">
       <DailyStatsCard
-        :daily-stats="timeTrackerData.dailyStats" :current-session="timeTrackerData.currentSession"
-        :tab-visited-time="formattedRunningTime"
+        :key="today" :daily-stats="timeTrackerData.dailyStats"
+        :current-session="timeTrackerData.currentSession" :tab-visited-time="formattedRunningTime"
       />
     </div>
 

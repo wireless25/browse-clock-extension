@@ -22,3 +22,5 @@ export const { data: extOptions, dataReady: extOptionsReady } = useWebExtensionS
 }, { writeDefaults: true, mergeDefaults: true })
 
 export const { data: lastSystemCheck, dataReady: lastSystemCheckReady } = useWebExtensionStorage<number>('lastSystemCheck', Date.now(), { writeDefaults: true, mergeDefaults: true })
+
+export const { data: today, dataReady: todayReady } = useWebExtensionStorage<string>('today', new Date().toISOString().split('T')[0])

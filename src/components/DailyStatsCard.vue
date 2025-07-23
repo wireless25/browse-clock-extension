@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import SiteList from './SiteList.vue'
 import StatsChart from './StatsChart.vue'
-import { timeTrackerData } from '~/logic/storage'
+import { timeTrackerData, today } from '~/logic/storage'
 import type { ChartDataPoint, DailyStats, SiteTimeData, StorageData } from '~/types'
 
 const props = defineProps<{
@@ -108,8 +108,7 @@ function getQuarterlyChartData(dailyStats: Record<string, DailyStats>): ChartDat
 }
 
 function getTodayTopSites(dailyStats: Record<string, DailyStats>, limit = 5): SiteTimeData[] {
-  const today = new Date().toISOString().split('T')[0]
-  const todayStats = dailyStats[today]
+  const todayStats = dailyStats[today.value]
 
   if (!todayStats)
     return []

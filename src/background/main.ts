@@ -1,6 +1,6 @@
 import type { Tabs } from 'webextension-polyfill'
 import type { DailyStats, TimeSession } from '../types/index'
-import { currentTab, currentTabStartTime, extOptions, isChromeFocused, lastSystemCheck, timeTrackerData } from '~/logic/storage'
+import { currentTab, currentTabStartTime, extOptions, isChromeFocused, lastSystemCheck, timeTrackerData, today } from '~/logic/storage'
 import { extractDomain, isForbiddenUrl } from '~/env'
 
 // only on dev mode
@@ -61,6 +61,11 @@ setInterval(async () => {
 
   lastSystemCheck.value = now
 }, 10000)
+
+setInterval(async () => {
+  // Update today's date every hour to rerender the side panel if the date changes
+  today.value = new Date().toISOString().split('T')[0]
+}, 3600000) // Every hour
 
 async function getActiveTab(): Promise<Tabs.Tab | undefined> {
   const queryOptions: Tabs.QueryQueryInfoType = { active: true, currentWindow: true }
@@ -156,24 +161,22 @@ async function saveSiteTime(domain: string, session: TimeSession) {
   if (!domain || !session || !session.startTime || !session.endTime || domain === 'idle')
     return
 
-  const today = new Date().toISOString().split('T')[0]
-
   // set new item if not exists
-  if (!timeTrackerData.value.dailyStats[today]) {
-    timeTrackerData.value.dailyStats[today] = {
-      date: today,
+  if (!timeTrackerData.value.dailyStats[today.value]) {
+    timeTrackerData.value.dailyStats[today.value] = {
+      date: today.value,
       sites: {},
       totalTime: 0,
     }
   }
 
-  if (!timeTrackerData.value.dailyStats[today].sites[domain]) {
+  if (!timeTrackerData.value.dailyStats[today.value].sites[domain]) {
     timeTrackerData.value.dailyStats = {
       ...timeTrackerData.value.dailyStats,
-      [today]: {
-        ...timeTrackerData.value.dailyStats[today],
+      [today.value]: {
+        ...timeTrackerData.value.dailyStats[today.value],
         sites: {
-          ...timeTrackerData.value.dailyStats[today].sites,
+          ...timeTrackerData.value.dailyStats[today.value].sites,
           [domain]: {
             domain,
             totalTime: 0,
@@ -186,27 +189,27 @@ async function saveSiteTime(domain: string, session: TimeSession) {
   }
 
   const newDailyStats: DailyStats = {
-    ...timeTrackerData.value.dailyStats[today],
-    totalTime: timeTrackerData.value.dailyStats[today].totalTime += session.duration,
+    ...timeTrackerData.value.dailyStats[today.value],
+    totalTime: timeTrackerData.value.dailyStats[today.value].totalTime += session.duration,
     sites: {
-      ...timeTrackerData.value.dailyStats[today].sites,
+      ...timeTrackerData.value.dailyStats[today.value].sites,
       [domain]: {
-        ...timeTrackerData.value.dailyStats[today].sites[domain],
-        totalTime: timeTrackerData.value.dailyStats[today].sites[domain].totalTime += session.duration,
-        sessions: [...timeTrackerData.value.dailyStats[today].sites[domain].sessions, session],
+        ...timeTrackerData.value.dailyStats[today.value].sites[domain],
+        totalTime: timeTrackerData.value.dailyStats[today.value].sites[domain].totalTime += session.duration,
+        sessions: [...timeTrackerData.value.dailyStats[today.value].sites[domain].sessions, session],
         lastVisited: session.endTime,
       },
     },
   }
 
-  timeTrackerData.value.dailyStats[today] = newDailyStats
+  timeTrackerData.value.dailyStats[today.value] = newDailyStats
 
-  if (!timeTrackerData.value.dailyStats[today].sites[domain].favicon) {
+  if (!timeTrackerData.value.dailyStats[today.value].sites[domain].favicon) {
     try {
       const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`
       const response = await fetch(faviconUrl)
       if (response.ok) {
-        timeTrackerData.value.dailyStats[today].sites[domain].favicon = faviconUrl
+        timeTrackerData.value.dailyStats[today.value].sites[domain].favicon = faviconUrl
       }
     }
     catch (error) {
