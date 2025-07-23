@@ -1,7 +1,7 @@
 # ⏰ ChronoTab
 > Chrome extension to track time spent on tabs
 
-![Preview of the extension](https://raw.githubusercontent.com/wireless25/chrome-ext-surf-duration/main/preview.jpg)
+![Preview of the extension](https://github.com/wireless25/chrome-ext-surf-duration/blob/fed6186c5e416f8717db1f770625f44597581238/preview.jpg)
 
 ## Development
 ### Folders
