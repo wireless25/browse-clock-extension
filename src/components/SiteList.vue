@@ -79,11 +79,11 @@ function handleImageError(event: Event) {
             <h3 class="font-semibold text-gray-900 dark:text-gray-300 truncate">
               {{ site.domain }}
             </h3>
-            <span class="text-sm font-medium text-gray-900">{{ formatTime(site.totalTime) }}</span>
+            <span class="text-sm font-medium text-gray-900 dark:text-gray-300">{{ formatTime(site.totalTime) }}</span>
           </div>
 
           <div class="flex items-center justify-between">
-            <p class="text-sm text-gray-500">
+            <p class="text-sm text-gray-400">
               {{ site.sessions.length }} sessions
             </p>
             <span class="text-xs text-gray-400">{{ formatPercentage(site.totalTime) }}%</span>
