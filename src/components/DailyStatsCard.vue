@@ -14,12 +14,11 @@ const props = defineProps<{
   dailyStats: Record<string, DailyStats>
 }>()
 
-const dayKey = computed(() => new Date().toISOString().split('T')[0])
-const dayData = computed<StorageData['dailyStats'][typeof dayKey.value]>(() => props.dailyStats[dayKey.value])
+const dayData = computed<StorageData['dailyStats'][typeof today.value]>(() => props.dailyStats[today.value])
 const formattedDate = computed(() => {
-  if (!dayKey.value)
+  if (!today.value)
     return ''
-  const date = new Date(dayKey.value)
+  const date = new Date(today.value)
   return date.toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',

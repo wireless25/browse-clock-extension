@@ -2,6 +2,7 @@ import type { Tabs } from 'webextension-polyfill'
 import type { DailyStats, TimeSession } from '../types/index'
 import { currentTab, currentTabStartTime, extOptions, isChromeFocused, lastSystemCheck, timeTrackerData, today } from '~/logic/storage'
 import { extractDomain, isForbiddenUrl } from '~/env'
+import { getNextMidnightTimestamp } from '~/logic'
 
 // only on dev mode
 if (import.meta.hot) {
@@ -25,6 +26,20 @@ if (USE_SIDE_PANEL) {
 browser.runtime.onInstalled.addListener((): void => {
   // eslint-disable-next-line no-console
   console.log('Extension installed')
+  setupMidnightAlarm()
+  checkAndSetNewDate()
+})
+browser.runtime.onStartup.addListener(() => {
+  // eslint-disable-next-line no-console
+  console.log('Extension started')
+  setupMidnightAlarm()
+  checkAndSetNewDate()
+})
+browser.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === 'midnightCheck') {
+    console.log('Midnight alarm triggered! Checking for new day...')
+    checkAndSetNewDate()
+  }
 })
 browser.tabs.onActivated.addListener(async ({ tabId }) => {
   await handleTabUpdate({ tabId })
@@ -61,11 +76,6 @@ setInterval(async () => {
 
   lastSystemCheck.value = now
 }, 10000)
-
-setInterval(async () => {
-  // Update today's date every hour to rerender the side panel if the date changes
-  today.value = new Date().toISOString().split('T')[0]
-}, 3600000) // Every hour
 
 async function getActiveTab(): Promise<Tabs.Tab | undefined> {
   const queryOptions: Tabs.QueryQueryInfoType = { active: true, currentWindow: true }
@@ -155,6 +165,31 @@ async function saveCurrentSession({ domain, startTime }: { domain: string, start
     domain,
     startTime,
   }
+}
+
+function setupMidnightAlarm() {
+  const nextMidnightTime = getNextMidnightTimestamp()
+
+  browser.alarms.create('midnightCheck', {
+    when: nextMidnightTime, // Set the first alarm to fire at the precise next midnight
+    periodInMinutes: 24 * 60, // Subsequent alarms will fire exactly 24 hours after the first
+  })
+
+  console.log(
+    `Midnight alarm scheduled. First fire at: ${new Date(
+      nextMidnightTime,
+    ).toLocaleString()}`,
+  )
+}
+
+async function checkAndSetNewDate() {
+  const now = new Date().toISOString().split('T')[0]
+
+  if (now === today.value)
+    return
+
+  console.log(`New day detected! Old: ${today.value}, New: ${now}`)
+  today.value = now
 }
 
 async function saveSiteTime(domain: string, session: TimeSession) {

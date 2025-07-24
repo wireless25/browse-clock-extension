@@ -41,6 +41,7 @@ export async function getManifest() {
       'sidePanel',
       'idle',
       'windows',
+      'alarms',
     ],
     host_permissions: ['*://*/*'],
     content_scripts: [

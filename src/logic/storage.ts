@@ -19,8 +19,8 @@ export const { data: extOptions, dataReady: extOptionsReady } = useWebExtensionS
   trackLocalhost: false,
   allowList: [],
   excludeList: [],
-}, { writeDefaults: true, mergeDefaults: true })
+}, { writeDefaults: true })
 
-export const { data: lastSystemCheck, dataReady: lastSystemCheckReady } = useWebExtensionStorage<number>('lastSystemCheck', Date.now(), { writeDefaults: true, mergeDefaults: true })
+export const { data: lastSystemCheck, dataReady: lastSystemCheckReady } = useWebExtensionStorage<number>('lastSystemCheck', Date.now(), { writeDefaults: true })
 
-export const { data: today, dataReady: todayReady } = useWebExtensionStorage<string>('today', new Date().toISOString().split('T')[0])
+export const { data: today, dataReady: todayReady } = useWebExtensionStorage<string>('today', new Date().toISOString().split('T')[0], { writeDefaults: true })
