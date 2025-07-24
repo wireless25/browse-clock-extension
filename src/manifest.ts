@@ -43,23 +43,6 @@ export async function getManifest() {
       'windows',
       'alarms',
     ],
-    host_permissions: ['*://*/*'],
-    content_scripts: [
-      {
-        matches: [
-          '<all_urls>',
-        ],
-        js: [
-          'dist/contentScripts/index.global.js',
-        ],
-      },
-    ],
-    web_accessible_resources: [
-      {
-        resources: ['dist/contentScripts/style.css'],
-        matches: ['<all_urls>'],
-      },
-    ],
     content_security_policy: {
       extension_pages: isDev
         // this is required on dev for Vite script to load
@@ -79,15 +62,6 @@ export async function getManifest() {
     (manifest as any).side_panel = {
       default_path: 'dist/sidepanel/index.html',
     }
-  }
-
-  // FIXME: not work in MV3
-  if (isDev && false) {
-    // for content script, as browsers will cache them for each reload,
-    // we use a background script to always inject the latest version
-    // see src/background/contentScriptHMR.ts
-    delete manifest.content_scripts
-    manifest.permissions?.push('webNavigation')
   }
 
   return manifest

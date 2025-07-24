@@ -8,8 +8,6 @@ import { getNextMidnightTimestamp } from '~/logic'
 if (import.meta.hot) {
   // @ts-expect-error for background HMR
   import('/@vite/client')
-  // load latest content script
-  import('./contentScriptHMR')
 }
 
 // remove or turn this off if you don't use side panel
@@ -37,6 +35,7 @@ browser.runtime.onStartup.addListener(() => {
 })
 browser.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === 'midnightCheck') {
+    // eslint-disable-next-line no-console
     console.log('Midnight alarm triggered! Checking for new day...')
     checkAndSetNewDate()
   }
@@ -175,6 +174,7 @@ function setupMidnightAlarm() {
     periodInMinutes: 24 * 60, // Subsequent alarms will fire exactly 24 hours after the first
   })
 
+  // eslint-disable-next-line no-console
   console.log(
     `Midnight alarm scheduled. First fire at: ${new Date(
       nextMidnightTime,
@@ -188,6 +188,7 @@ async function checkAndSetNewDate() {
   if (now === today.value)
     return
 
+  // eslint-disable-next-line no-console
   console.log(`New day detected! Old: ${today.value}, New: ${now}`)
   today.value = now
 }
