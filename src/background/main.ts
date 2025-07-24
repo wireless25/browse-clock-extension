@@ -2,7 +2,7 @@ import type { Tabs } from 'webextension-polyfill'
 import type { DailyStats, TimeSession } from '../types/index'
 import { currentTab, currentTabStartTime, extOptions, isChromeFocused, lastSystemCheck, timeTrackerData, today } from '~/logic/storage'
 import { extractDomain, isForbiddenUrl } from '~/env'
-import { getNextMidnightTimestamp } from '~/logic'
+import { getDomainIcon, getNextMidnightTimestamp } from '~/logic/utils'
 
 // only on dev mode
 if (import.meta.hot) {
@@ -241,15 +241,6 @@ async function saveSiteTime(domain: string, session: TimeSession) {
   timeTrackerData.value.dailyStats[today.value] = newDailyStats
 
   if (!timeTrackerData.value.dailyStats[today.value].sites[domain].favicon) {
-    try {
-      const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`
-      const response = await fetch(faviconUrl)
-      if (response.ok) {
-        timeTrackerData.value.dailyStats[today.value].sites[domain].favicon = faviconUrl
-      }
-    }
-    catch (error) {
-      console.error('Error fetching favicon:', error)
-    }
+    timeTrackerData.value.dailyStats[today.value].sites[domain].favicon = getDomainIcon(domain)
   }
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { currentTabStartTime, isChromeFocused, timeTrackerData, today } from '~/logic/storage'
 import DailyStatsCard from '~/components/DailyStatsCard.vue'
-import { useRunningClock } from '~/composables/useRunningClick'
+import { useRunningClock } from '~/composables/useRunningClock'
 import { applyTheme, prefersDarkMode } from '~/logic/common-setup'
 
 const DEBUG = false

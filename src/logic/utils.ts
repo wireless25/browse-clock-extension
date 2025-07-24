@@ -11,3 +11,7 @@ export function getNextMidnightTimestamp() {
   )
   return nextMidnight.getTime() // Returns timestamp in milliseconds
 }
+
+export function getDomainIcon(domain: string): string {
+  return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`
+}

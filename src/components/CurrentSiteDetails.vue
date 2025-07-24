@@ -1,70 +1,15 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue'
-import type { StorageData } from '../types/index'
+import { ref } from 'vue'
+import type { StorageData } from '~/types/index'
+import { getDomainIcon } from '~/logic/utils'
 
 const { site } = defineProps<{ site: StorageData['currentSession'], tabVisitedTime: string }>()
 
-function formatDuration(ms: number): string {
-  const seconds = Math.floor(ms / 1000)
-  const minutes = Math.floor(seconds / 60)
-  const hours = Math.floor(minutes / 60)
-
-  const parts = []
-  if (hours > 0) {
-    parts.push(`${hours}h`)
-  }
-  if (minutes % 60 > 0) {
-    parts.push(`${minutes % 60}m`)
-  }
-  if (seconds % 60 > 0 && hours === 0) {
-    parts.push(`${seconds % 60}s`)
-  }
-  else if (seconds % 60 === 0 && parts.length === 0) {
-    parts.push('0s')
-  }
-  return parts.join(' ')
-}
-
-function getDomainIcon(domain: string): string {
-  try {
-    const url = new URL(`http://${domain}`)
-    return `https://www.google.com/s2/favicons?domain=${url.hostname}&sz=32`
-  }
-  catch (error) {
-    console.error('Invalid domain for favicon:', domain, error)
-    return 'https://www.google.com/s2/favicons?domain=default&sz=32'
-  }
-}
-
-const duration = computed(() => {
-  if (!site?.startTime)
-    return 0
-  return new Date().getTime() - new Date(site.startTime).getTime()
-})
-
-const time = ref(duration.value ? formatDuration(duration.value) : 'N/A')
-
-function visitDurationTimer() {
-  if (!site?.startTime)
-    return 'N/A'
-  const duration = new Date().getTime() - new Date(site.startTime).getTime()
-  time.value = formatDuration(duration)
-}
-
-// Pulse animation state
 const isPulsing = ref(true)
+const faviconUrl = ref('')
 
-let interval: ReturnType<typeof setInterval>
 onMounted(() => {
-  interval = setInterval(() => {
-    if (site?.startTime) {
-      visitDurationTimer()
-    }
-  }, 1000)
-})
-
-onUnmounted(() => {
-  clearInterval(interval)
+  faviconUrl.value = getDomainIcon(site?.domain || '')
 })
 </script>
 
@@ -103,7 +48,7 @@ onUnmounted(() => {
       <div class="flex items-center space-x-4">
         <!-- Favicon with enhanced styling -->
         <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
-          <img :src="getDomainIcon(site.domain)" alt="Favicon" class="h-8 w-8 rounded-lg">
+          <img v-if="faviconUrl" :src="faviconUrl" alt="Favicon" class="h-8 w-8 rounded-lg">
         </div>
 
         <!-- Site Details -->
@@ -119,7 +64,7 @@ onUnmounted(() => {
         <!-- Timer Display -->
         <div class="text-right">
           <div class="text-3xl font-bold tracking-tight">
-            {{ time }}
+            {{ tabVisitedTime }}
           </div>
           <p class="text-sm opacity-75">
             elapsed
@@ -162,7 +107,6 @@ onUnmounted(() => {
 
 <style scoped>
 @keyframes pulse-slow {
-
   0%,
   100% {
     opacity: 1;

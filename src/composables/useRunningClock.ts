@@ -52,7 +52,7 @@ export function useRunningClock(options: UseRunningClockOptions): UseRunningCloc
     const totalSeconds = internalRunningSeconds.value
     // Handle cases where totalSeconds might be negative (if start time is in the future)
     if (totalSeconds < 0) {
-      return '00:00:00' // Or some other indication like '-HH:MM:SS'
+      return '0s'
     }
 
     const hours = Math.floor(totalSeconds / 3600)
@@ -60,9 +60,22 @@ export function useRunningClock(options: UseRunningClockOptions): UseRunningCloc
     const seconds = totalSeconds % 60
 
     // Helper function to pad numbers with a leading zero if less than 10
-    const pad = (num: number): string => num.toString().padStart(2, '0')
+    // const pad = (num: number): string => num.toString().padStart(2, '0')
 
-    return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+    const parts = []
+    if (hours > 0) {
+      parts.push(`${hours}h`)
+    }
+    if (minutes % 60 > 0) {
+      parts.push(`${minutes % 60}m`)
+    }
+    if (seconds % 60 > 0 && hours === 0) {
+      parts.push(`${seconds % 60}s`)
+    }
+    else if (seconds % 60 === 0 && parts.length === 0) {
+      parts.push('0s')
+    }
+    return parts.join(' ')
   })
 
   // Watch the reactive startTime property
