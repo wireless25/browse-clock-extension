@@ -37,7 +37,6 @@ export async function getManifest() {
     permissions: [
       'tabs',
       'storage',
-      'activeTab',
       'sidePanel',
       'idle',
       'windows',
