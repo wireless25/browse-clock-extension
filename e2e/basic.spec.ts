@@ -7,5 +7,5 @@ test('popup page', async ({ page, extensionId }) => {
 
 test('options page', async ({ page, extensionId }) => {
   await page.goto(`chrome-extension://${extensionId}/dist/options/index.html`)
-  await expect(page.locator('img')).toHaveAttribute('alt', 'extension icon')
+  await expect(page.locator('h1')).toContainText('Extension Settings')
 })
