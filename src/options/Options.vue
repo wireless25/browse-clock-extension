@@ -87,7 +87,7 @@ prefersDarkMode.addEventListener('change', mql => applyTheme(mql))
               <textarea
                 id="allowList" v-model="allowList" rows="5"
                 class="w-full p-2 border border-gray-200 dark:border-gray-600 rounded-md bg-white dark:bg-dark text-zinc-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter URLs to allow (one per line, supports wildcards like *.example.com)"
+                placeholder="Enter URLs to allow (one per line, like https://example.com)"
               />
               <p class="text-sm text-gray-500 dark:text-gray-500 mt-2">
                 Only URLs matching entries in this list will be tracked. If
@@ -104,7 +104,7 @@ prefersDarkMode.addEventListener('change', mql => applyTheme(mql))
               <textarea
                 id="excludeList" v-model="excludeList" rows="5"
                 class="w-full p-2 border border-gray-200 dark:border-gray-600 rounded-md bg-white dark:bg-dark text-zinc-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter URLs to exclude (one per line, supports wildcards like *.example.com)"
+                placeholder="Enter URLs to allow (one per line, like https://example.com)"
               />
               <p class="text-sm text-gray-500 dark:text-gray-500 mt-2">
                 URLs matching entries in this list will *never* be tracked,

@@ -39,3 +39,9 @@ export interface RingData {
   target: number
   color: string
 }
+
+export interface ExtensionOptions {
+  trackLocalhost: boolean
+  allowList: string[]
+  excludeList: string[]
+}

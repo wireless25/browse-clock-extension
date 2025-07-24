@@ -1,8 +1,7 @@
 import type { Tabs } from 'webextension-polyfill'
 import type { DailyStats, TimeSession } from '../types/index'
 import { currentTab, currentTabStartTime, extOptions, isChromeFocused, lastSystemCheck, timeTrackerData, today } from '~/logic/storage'
-import { extractDomain, isForbiddenUrl } from '~/env'
-import { getDomainIcon, getNextMidnightTimestamp } from '~/logic/utils'
+import { getDomainIcon, getMainDomain, getNextMidnightTimestamp, shouldTrackUrl } from '~/logic/utils'
 
 // only on dev mode
 if (import.meta.hot) {
@@ -82,31 +81,6 @@ async function getActiveTab(): Promise<Tabs.Tab | undefined> {
   return tabs[0]
 }
 
-function trackUrl(url: string) {
-  if (!url)
-    return false
-
-  if (isForbiddenUrl(url))
-    return false
-
-  if (url.startsWith('http://localhost') && extOptions.value.trackLocalhost === false)
-    return false
-
-  // if (extOptions.value.excludeList.length > 0) {
-  //   const isExcluded = extOptions.value.excludeList.some(excludedUrl => url.startsWith(excludedUrl))
-  //   if (isExcluded)
-  //     return false
-  // }
-
-  // if (extOptions.value.allowList.length > 0) {
-  //   const isAllowed = extOptions.value.allowList.some(allowedUrl => url.startsWith(allowedUrl))
-  //   if (!isAllowed)
-  //     return false
-  // }
-
-  return true
-}
-
 async function handleTabUpdate({ tabId }: { tabId: number }) {
   await endCurrentSession()
   await startTrackingTab(tabId)
@@ -122,13 +96,10 @@ async function startTrackingTab(tabId: number) {
     if (tab.active === false)
       return
 
-    if (!trackUrl(tab.url))
+    if (!shouldTrackUrl(tab.url, extOptions.value))
       return
 
-    if (tab.url?.startsWith('http://localhost') && extOptions.value.trackLocalhost === false)
-      return
-
-    const domain = extractDomain(tab.url)
+    const domain = getMainDomain(tab.url, { removeSubdomains: false })
     await saveCurrentSession({
       domain,
       startTime: new Date().toISOString(),

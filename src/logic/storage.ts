@@ -1,5 +1,5 @@
 import { useWebExtensionStorage } from '~/composables/useWebExtensionStorage'
-import type { StorageData } from '~/types/index'
+import type { ExtensionOptions, StorageData } from '~/types/index'
 
 export const { data: timeTrackerData, dataReady: timeTrackerDataReady } = useWebExtensionStorage<StorageData>('timeTrackerData', {
   currentSession: null,
@@ -15,7 +15,7 @@ export const { data: currentTabStartTime, dataReady: currentTabStartTimeReady } 
 // is the chrome window focused
 export const { data: isChromeFocused, dataReady: isChromeFocusedReady } = useWebExtensionStorage<boolean>('isChromeFocused', true, { writeDefaults: true })
 
-export const { data: extOptions, dataReady: extOptionsReady } = useWebExtensionStorage<{ trackLocalhost: boolean, allowList: string[], excludeList: string[] }>('extOptions', {
+export const { data: extOptions, dataReady: extOptionsReady } = useWebExtensionStorage<ExtensionOptions>('extOptions', {
   trackLocalhost: false,
   allowList: [],
   excludeList: [],
