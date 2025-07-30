@@ -77,7 +77,8 @@ function getBarColor(value: number, max: number): string {
       </h3>
       <div class="flex space-x-2">
         <button
-          v-for="period in periods" :key="period" class="rounded-lg px-3 py-1 text-sm font-medium transition-colors" :class="[
+          v-for="period in periods" :key="period"
+          class="rounded-lg px-3 py-1 text-sm font-medium transition-colors" :class="[
             activePeriod === period
               ? 'bg-blue-100 text-blue-700'
               : 'text-gray-500 hover:text-gray-700',
@@ -89,33 +90,36 @@ function getBarColor(value: number, max: number): string {
     </div>
 
     <!-- Chart Area -->
-    <div class="relative h-48">
-      <div class="absolute inset-0 flex items-end justify-between space-x-2">
-        <div v-for="(day, index) in chartData" :key="day.label" class="flex flex-1 flex-col items-center">
-          <!-- Bar -->
-          <div class="relative w-full flex flex-col justify-end h-40 mb-2">
+    <div class="relative h-48 px-4">
+      <div class="absolute left-0 top-0 flex h-40 flex-col justify-between text-xs text-gray-400 w-12">
+        <span class="text-right pr-2 leading-none">{{ formatTime(maxValue) }}</span>
+        <span class="text-right pr-2 leading-none">{{ formatTime(maxValue / 2) }}</span>
+        <span class="text-right pr-2 leading-none">0</span>
+      </div>
+      <div class="absolute inset-0 flex items-end justify-between space-x-2 ml-14 mr-2">
+        <div v-for="(day, index) in chartData" :key="day.label" class="flex flex-1 flex-col items-center min-w-0">
+          <div class="relative w-full flex flex-col justify-end h-40 mb-2 overflow-hidden">
+            <div
+              v-if="(day.value / maxValue) > 0.7"
+              class="absolute -top-5 left-1/2 transform -translate-x-1/2 text-xs text-gray-400 whitespace-nowrap z-10"
+            >
+              {{ formatTime(day.value) }}
+            </div>
             <div
               class="w-full rounded-t-lg transition-all duration-1000 ease-out"
               :class="getBarColor(day.value, maxValue)" :style="{
-                height: `${(day.value / maxValue) * 100}%`,
+                height: `${Math.max((day.value / maxValue) * 100, 2)}%`,
                 transitionDelay: `${index * 100}ms`,
               }"
             />
           </div>
 
           <!-- Label -->
-          <span class="text-xs font-medium text-gray-500">{{ day.label }}</span>
-
-          <!-- Value -->
-          <span class="text-xs text-gray-400 mt-1">{{ formatTime(day.value) }}</span>
+          <span class="text-xs font-medium text-gray-500 truncate w-full text-center">{{ day.label }}</span>
+          <span class="text-xs text-gray-400 mt-1 truncate w-full text-center">
+            {{ formatTime(day.value) }}
+          </span>
         </div>
-      </div>
-
-      <!-- Y-axis labels -->
-      <div class="absolute left-0 top-0 flex h-40 flex-col justify-between text-xs text-gray-400">
-        <span>{{ formatTime(maxValue) }}</span>
-        <span>{{ formatTime(maxValue / 2) }}</span>
-        <span>0</span>
       </div>
     </div>
 
