@@ -16,7 +16,7 @@ const ALARM_NAMES = {
 } as const
 
 const TIMING = {
-  SYSTEM_CHECK_INTERVAL: 10 / 60, // 10 seconds
+  SYSTEM_CHECK_INTERVAL: 30 / 60, // 30 seconds
   SYSTEM_SLEEP_THRESHOLD: 30000, // 30 seconds
   DAILY_MINUTES: 24 * 60, // 24 hours in minutes
 } as const
@@ -29,23 +29,31 @@ if (USE_SIDE_PANEL) {
     .catch((error: unknown) => console.error(error))
 }
 
-browser.runtime.onInstalled.addListener((): void => {
+browser.runtime.onInstalled.addListener(async () => {
   // eslint-disable-next-line no-console
   console.log('Extension installed')
-  setupMidnightAlarm()
   checkAndSetNewDate()
+  await setupMidnightAlarm()
+  await setupSystemCheckAlarm()
 })
-browser.runtime.onStartup.addListener(() => {
+browser.runtime.onStartup.addListener(async () => {
   // eslint-disable-next-line no-console
   console.log('Extension started')
-  setupMidnightAlarm()
   checkAndSetNewDate()
+  await setupMidnightAlarm()
+  await setupSystemCheckAlarm()
 })
-browser.alarms.onAlarm.addListener((alarm) => {
+browser.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === ALARM_NAMES.MIDNIGHT_CHECK) {
     // eslint-disable-next-line no-console
     console.log('Midnight alarm triggered! Checking for new day...')
     checkAndSetNewDate()
+  }
+
+  if (alarm.name === ALARM_NAMES.LAST_SYSTEM_CHECK) {
+    // eslint-disable-next-line no-console
+    console.log('Alarm \'lastSystemCheck\' fired! Performing task...')
+    checkAndHandleSystemSleep()
   }
 })
 browser.tabs.onActivated.addListener(async ({ tabId }) => {
@@ -66,7 +74,7 @@ browser.tabs.onUpdated.addListener(async (tabId, { favIconUrl, status }) => {
 browser.windows.onFocusChanged.addListener(async (windowId) => {
   isChromeFocused.value = windowId !== browser.windows.WINDOW_ID_NONE
   if (!isChromeFocused.value) {
-    await endCurrentSession()
+    endCurrentSession()
     currentTab.value = 'idle'
     currentTabStartTime.value = new Date().toISOString()
     timeTrackerData.value.currentSession = null
@@ -80,20 +88,6 @@ browser.windows.onFocusChanged.addListener(async (windowId) => {
   }
 })
 
-setInterval(async () => {
-  const now = Date.now()
-
-  // Check if we missed time (system sleep)
-  const gap = now - lastSystemCheck.value
-
-  if (gap > TIMING.SYSTEM_SLEEP_THRESHOLD) {
-    // End any current session at the last saved time
-    endCurrentSession(new Date(lastSystemCheck.value))
-  }
-
-  lastSystemCheck.value = now
-}, 10000)
-
 async function getActiveTab(): Promise<Tabs.Tab | undefined> {
   const queryOptions: Tabs.QueryQueryInfoType = { active: true, currentWindow: true }
   const tabs = await browser.tabs.query(queryOptions)
@@ -101,7 +95,7 @@ async function getActiveTab(): Promise<Tabs.Tab | undefined> {
 }
 
 async function handleTabUpdate({ tabId }: { tabId: number }) {
-  await endCurrentSession()
+  endCurrentSession()
   await startTrackingTab(tabId)
 }
 
@@ -119,7 +113,7 @@ async function startTrackingTab(tabId: number) {
       return
 
     const domain = getMainDomain(tab.url, { removeSubdomains: false })
-    await saveCurrentSession({
+    saveCurrentSession({
       domain,
       startTime: new Date().toISOString(),
     })
@@ -129,14 +123,14 @@ async function startTrackingTab(tabId: number) {
   }
 }
 
-async function endCurrentSession(endTime?: Date) {
+function endCurrentSession(endTime?: Date) {
   if (!currentTabStartTime.value || !currentTab.value)
     return
 
   endTime = endTime || new Date()
   const duration = endTime.getTime() - new Date(currentTabStartTime.value).getTime()
 
-  await saveSiteTime(currentTab.value, {
+  saveSiteTime(currentTab.value, {
     startTime: currentTabStartTime.value,
     endTime: endTime.toISOString(),
     duration,
@@ -147,7 +141,7 @@ async function endCurrentSession(endTime?: Date) {
   currentTab.value = 'idle'
 }
 
-async function saveCurrentSession({ domain, startTime }: { domain: string, startTime: string }) {
+function saveCurrentSession({ domain, startTime }: { domain: string, startTime: string }) {
   currentTabStartTime.value = startTime
   currentTab.value = domain
   timeTrackerData.value.currentSession = {
@@ -156,9 +150,15 @@ async function saveCurrentSession({ domain, startTime }: { domain: string, start
   }
 }
 
-function setupMidnightAlarm() {
+async function setupSystemCheckAlarm() {
+  await browser.alarms.clear(ALARM_NAMES.LAST_SYSTEM_CHECK)
+  browser.alarms.create(ALARM_NAMES.LAST_SYSTEM_CHECK, { periodInMinutes: TIMING.SYSTEM_CHECK_INTERVAL })
+}
+
+async function setupMidnightAlarm() {
   const nextMidnightTime = getNextMidnightTimestamp()
 
+  await browser.alarms.clear(ALARM_NAMES.MIDNIGHT_CHECK)
   browser.alarms.create(ALARM_NAMES.MIDNIGHT_CHECK, {
     when: nextMidnightTime, // Set the first alarm to fire at the precise next midnight
     periodInMinutes: TIMING.DAILY_MINUTES,
@@ -172,7 +172,7 @@ function setupMidnightAlarm() {
   )
 }
 
-async function checkAndSetNewDate() {
+function checkAndSetNewDate() {
   const now = new Date().toISOString().split('T')[0]
 
   if (now === today.value)
@@ -181,6 +181,20 @@ async function checkAndSetNewDate() {
   // eslint-disable-next-line no-console
   console.log(`New day detected! Old: ${today.value}, New: ${now}`)
   today.value = now
+}
+
+function checkAndHandleSystemSleep() {
+  const now = Date.now()
+
+  // Check if we missed time (system sleep)
+  const gap = now - lastSystemCheck.value
+
+  if (gap > TIMING.SYSTEM_SLEEP_THRESHOLD) {
+    // End any current session at the last saved time
+    endCurrentSession(new Date(lastSystemCheck.value))
+  }
+
+  lastSystemCheck.value = now
 }
 
 function setFaviconForTab(favIconUrl: string) {
@@ -199,7 +213,7 @@ function setFaviconForTab(favIconUrl: string) {
   }
 }
 
-async function saveSiteTime(domain: string, session: TimeSession) {
+function saveSiteTime(domain: string, session: TimeSession) {
   if (!domain || !session || !session.startTime || !session.endTime || domain === 'idle')
     return
 
