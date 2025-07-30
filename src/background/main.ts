@@ -73,7 +73,7 @@ browser.windows.onFocusChanged.addListener(async (windowId) => {
   if (!isChromeFocused.value) {
     endCurrentSession()
     currentTab.value = 'idle'
-    currentTabStartTime.value = new Date().toISOString()
+    currentTabStartTime.value = Date.now()
     timeTrackerData.value.currentSession = null
     return
   }
@@ -112,7 +112,7 @@ async function startTrackingTab(tabId: number) {
     const domain = getMainDomain(tab.url, { removeSubdomains: false })
     saveCurrentSession({
       domain,
-      startTime: new Date().toISOString(),
+      startTime: Date.now(),
     })
   }
   catch (error) {
@@ -120,25 +120,25 @@ async function startTrackingTab(tabId: number) {
   }
 }
 
-function endCurrentSession(endTime?: Date) {
+function endCurrentSession(endTime?: number) {
   if (!currentTabStartTime.value || !currentTab.value)
     return
 
-  endTime = endTime || new Date()
-  const duration = endTime.getTime() - new Date(currentTabStartTime.value).getTime()
+  endTime = endTime || Date.now()
+  const duration = endTime - currentTabStartTime.value
 
   saveSiteTime(currentTab.value, {
     startTime: currentTabStartTime.value,
-    endTime: endTime.toISOString(),
+    endTime,
     duration,
   })
 
   timeTrackerData.value.currentSession = null
-  currentTabStartTime.value = new Date().toISOString()
+  currentTabStartTime.value = Date.now()
   currentTab.value = 'idle'
 }
 
-function saveCurrentSession({ domain, startTime }: { domain: string, startTime: string }) {
+function saveCurrentSession({ domain, startTime }: { domain: string, startTime: number }) {
   currentTabStartTime.value = startTime
   currentTab.value = domain
   timeTrackerData.value.currentSession = {
@@ -188,7 +188,7 @@ function checkAndHandleSystemSleep() {
 
   if (gap > TIMING.SYSTEM_SLEEP_THRESHOLD) {
     // End any current session at the last saved time
-    endCurrentSession(new Date(lastSystemCheck.value))
+    endCurrentSession(lastSystemCheck.value)
   }
 
   lastSystemCheck.value = now
@@ -234,7 +234,7 @@ function saveSiteTime(domain: string, session: TimeSession) {
             domain,
             totalTime: 0,
             sessions: [],
-            lastVisited: new Date().toISOString(),
+            lastVisited: Date.now(),
           },
         },
       },

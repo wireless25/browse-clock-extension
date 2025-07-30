@@ -26,7 +26,6 @@ const formattedDate = computed(() => {
 })
 
 function getWeeklyChartData(dailyStats: Record<string, DailyStats>): ChartDataPoint[] {
-  const today = new Date()
   const weekData: ChartDataPoint[] = []
 
   // Get last 7 days
@@ -66,7 +65,6 @@ function getTimePeriodData(
 }
 
 function getQuarterlyChartData(dailyStats: Record<string, DailyStats>): ChartDataPoint[] {
-  const today = new Date()
   const quarterData: ChartDataPoint[] = []
 
   // Group by weeks for 90 days (13 weeks)
@@ -120,7 +118,7 @@ const chartData = computed(() =>
   getTimePeriodData(dailyStats, activePeriod.value),
 )
 const topSites = computed(() => getTodayTopSites(dailyStats, 5))
-const todayTotal = computed(() => Object.values(dailyStats[new Date().toISOString().split('T')[0]]?.sites || {}).reduce(
+const todayTotal = computed(() => Object.values(dailyStats[today]?.sites || {}).reduce(
   (sum, site) => sum + site.totalTime,
   0,
 ))

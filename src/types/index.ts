@@ -2,18 +2,18 @@ export interface SiteTimeData {
   domain: string
   totalTime: number // milliseconds
   sessions: TimeSession[]
-  lastVisited: string // ISO date string
+  lastVisited: number // timestamp
   favicon?: string
 }
 
 export interface TimeSession {
-  startTime: string // ISO date string
-  endTime: string // ISO date string
+  startTime: number // timestamp
+  endTime: number // timestamp
   duration: number
 }
 
 export interface DailyStats {
-  date: string // YYYY-MM-DD
+  date: string // ISO date string
   sites: { [x: string]: SiteTimeData }
   totalTime: number
 }
@@ -21,7 +21,7 @@ export interface DailyStats {
 export interface StorageData {
   currentSession: {
     domain: string
-    startTime: string
+    startTime: number
   } | null
   dailyStats: Record<any, DailyStats>
 }

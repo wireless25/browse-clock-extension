@@ -9,7 +9,7 @@ interface UseRunningClockOptions {
   /**
    * A reactive reference or computed property holding the start time as an ISO string (e.g., '2023-01-01T10:00:00Z').
    */
-  startTime: Ref<string> | ComputedRef<string>
+  startTime: Ref<number> | ComputedRef<number>
 }
 
 /**
@@ -42,7 +42,7 @@ export function useRunningClock(options: UseRunningClockOptions): UseRunningCloc
       internalRunningSeconds.value = 0
       return
     }
-    const startTimestamp = new Date(startTime.value).getTime()
+    const startTimestamp = startTime.value
     const nowTimestamp = Date.now()
     // Calculate difference in milliseconds and convert to seconds
     internalRunningSeconds.value = Math.floor((nowTimestamp - startTimestamp) / 1000)

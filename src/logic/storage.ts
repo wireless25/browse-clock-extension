@@ -10,7 +10,7 @@ export const { data: timeTrackerData, dataReady: timeTrackerDataReady } = useWeb
 export const { data: currentTab, dataReady: currentTabReady } = useWebExtensionStorage<string>('currentTab', '')
 
 // start time of current tab
-export const { data: currentTabStartTime, dataReady: currentTabStartTimeReady } = useWebExtensionStorage<string>('currentTabStartTime', new Date().toISOString())
+export const { data: currentTabStartTime, dataReady: currentTabStartTimeReady } = useWebExtensionStorage<number>('currentTabStartTime', Date.now())
 
 // is the chrome window focused
 export const { data: isChromeFocused, dataReady: isChromeFocusedReady } = useWebExtensionStorage<boolean>('isChromeFocused', true, { writeDefaults: true })
