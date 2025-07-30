@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { currentTab, currentTabStartTime, timeTrackerData, today } from '~/logic/storage'
 import DailyStatsCard from '~/components/DailyStatsCard.vue'
+import SessionHistory from '~/components/SessionHistory.vue'
 import UiButton from '~/components/ui/Button.vue'
 import { useRunningClock } from '~/composables/useRunningClock'
 import { applyTheme, prefersDarkMode } from '~/logic/common-setup'
@@ -28,7 +29,10 @@ prefersDarkMode.addEventListener('change', mql => applyTheme(mql))
         :today="today"
       />
     </div>
-    <UiButton @click="openOptionsPage">
+    <div class="mt-4">
+      <SessionHistory :daily-stats="timeTrackerData.dailyStats" />
+    </div>
+    <UiButton class="mt-4" @click="openOptionsPage">
       Open Options
     </UiButton>
   </main>
