@@ -149,7 +149,7 @@ const rerenderKey = computed(() => `${currentSession?.domain}-${Date.now()}`)
       <div>
         <CurrentSiteDetails
           :key="rerenderKey"
-          :site="currentSession"
+          :current-tab="currentSession?.domain || 'idle'"
           :tab-visited-time="tabVisitedTime"
         />
       </div>

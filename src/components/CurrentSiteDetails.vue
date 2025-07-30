@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { StorageData } from '~/types/index'
 import { getDomainIcon } from '~/logic/utils'
 
-const { site } = defineProps<{ site: StorageData['currentSession'], tabVisitedTime: string }>()
+const { currentTab, tabVisitedTime } = defineProps<{ currentTab: string, tabVisitedTime: string }>()
 
 const isPulsing = ref(true)
 const faviconUrl = ref('')
 
 onMounted(() => {
-  faviconUrl.value = getDomainIcon(site?.domain || '')
+  faviconUrl.value = getDomainIcon(currentTab || '')
 })
 </script>
 
@@ -21,7 +20,7 @@ onMounted(() => {
     <div class="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
     <div class="absolute -bottom-6 -left-6 h-32 w-32 rounded-full bg-white/5" />
 
-    <div v-if="site" class="relative z-10">
+    <div v-if="currentTab && currentTab !== 'idle'" class="relative z-10">
       <!-- Header -->
       <div class="mb-4 flex items-center justify-between">
         <div class="flex items-center space-x-2">
@@ -54,7 +53,7 @@ onMounted(() => {
         <!-- Site Details -->
         <div class="flex-1 min-w-0">
           <h4 class="text-xl font-bold text-white mb-1 truncate">
-            {{ site.domain }}
+            {{ currentTab }}
           </h4>
           <p class="text-sm opacity-75">
             Active session
