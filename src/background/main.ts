@@ -55,6 +55,7 @@ browser.windows.onFocusChanged.addListener(async (windowId) => {
     return
   }
 
+  checkAndSetNewDate()
   const tab = await getActiveTab()
   if (tab && tab.id) {
     await startTrackingTab(tab.id)
