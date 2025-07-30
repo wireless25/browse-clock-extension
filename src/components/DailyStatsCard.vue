@@ -5,14 +5,11 @@ import StatsChart from './StatsChart.vue'
 import CurrentSiteDetails from './CurrentSiteDetails.vue'
 import type { ChartDataPoint, DailyStats, SiteTimeData, StorageData } from '~/types'
 
-const { tabVisitedTime, currentSession, today, dailyStats } = defineProps<{
+const { tabVisitedTime, today, dailyStats, currentTab } = defineProps<{
   tabVisitedTime: string
-  currentSession: {
-    domain: string
-    startTime: string
-  } | null
   dailyStats: Record<string, DailyStats>
   today: string
+  currentTab: string
 }>()
 
 const dayData = computed<StorageData['dailyStats'][typeof today]>(() => dailyStats[today])
@@ -133,7 +130,7 @@ function handlePeriodChange(period: '7D' | '90D') {
 }
 
 // rerender the current session card when the current session changes
-const rerenderKey = computed(() => `${currentSession?.domain}-${Date.now()}`)
+const rerenderKey = computed(() => `${currentTab}-${Date.now()}`)
 </script>
 
 <template>
@@ -149,7 +146,7 @@ const rerenderKey = computed(() => `${currentSession?.domain}-${Date.now()}`)
       <div>
         <CurrentSiteDetails
           :key="rerenderKey"
-          :current-tab="currentSession?.domain || 'idle'"
+          :current-tab="currentTab || 'idle'"
           :tab-visited-time="tabVisitedTime"
         />
       </div>

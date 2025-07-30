@@ -22,8 +22,10 @@ prefersDarkMode.addEventListener('change', mql => applyTheme(mql))
     <div class="mt-2">
       <DailyStatsCard
         :key="today" :daily-stats="timeTrackerData.dailyStats"
-        :current-session="timeTrackerData.currentSession" :current-tab-start-time="currentTabStartTime"
-        :current-tab="currentTab" :tab-visited-time="formattedRunningTime" :today="today"
+        :current-session="timeTrackerData.currentSession"
+        :current-tab="currentTab"
+        :tab-visited-time="formattedRunningTime"
+        :today="today"
       />
     </div>
     <UiButton @click="openOptionsPage">
