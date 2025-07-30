@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { applyTheme, prefersDarkMode } from '~/logic/common-setup'
+import UiButton from '~/components/ui/Button.vue'
 
 function openOptionsPage() {
   browser.runtime.openOptionsPage()
@@ -18,8 +19,8 @@ prefersDarkMode.addEventListener('change', mql => applyTheme(mql))
     <h1 class="text-2xl font-bold">
       BrowseClock
     </h1>
-    <button class="btn mt-4" @click="openOptionsPage">
+    <UiButton @click="openOptionsPage">
       Open Options
-    </button>
+    </UiButton>
   </main>
 </template>
