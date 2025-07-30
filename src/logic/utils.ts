@@ -81,11 +81,11 @@ export function getMainDomain(url: string, { removeSubdomains = false }: { remov
 
 export function formatTime(timestamp: number): string {
   const date = new Date(timestamp)
-  return date.toLocaleTimeString('en-US', {
+  return date.toLocaleTimeString('en-GB', {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
-    hour12: false,
+    hourCycle: 'h23',
   })
 }
 
@@ -99,10 +99,10 @@ export function formatDuration(milliseconds: number): string {
   if (hours > 0) {
     parts.push(`${hours}h`)
   }
-  if (minutes > 0) {
+  if (minutes > 0 || (hours > 0 && minutes === 0)) {
     parts.push(`${minutes}m`)
   }
-  if (seconds > 0 || parts.length === 0) {
+  if (seconds > 0 || (minutes > 0 && seconds === 0) || (hours > 0 && minutes === 0 && seconds === 0) || (hours === 0 && minutes === 0 && seconds === 0)) {
     parts.push(`${seconds}s`)
   }
 
