@@ -9,8 +9,17 @@ if (import.meta.hot) {
   import('/@vite/client')
 }
 
-// remove or turn this off if you don't use side panel
-const USE_SIDE_PANEL = true
+const USE_SIDE_PANEL = true as const
+const ALARM_NAMES = {
+  MIDNIGHT_CHECK: 'midnightCheck',
+  LAST_SYSTEM_CHECK: 'lastSystemCheck',
+} as const
+
+const TIMING = {
+  SYSTEM_CHECK_INTERVAL: 10 / 60, // 10 seconds
+  SYSTEM_SLEEP_THRESHOLD: 30000, // 30 seconds
+  DAILY_MINUTES: 24 * 60, // 24 hours in minutes
+} as const
 
 // to toggle the sidepanel with the action button in chromium:
 if (USE_SIDE_PANEL) {
@@ -33,7 +42,7 @@ browser.runtime.onStartup.addListener(() => {
   checkAndSetNewDate()
 })
 browser.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === 'midnightCheck') {
+  if (alarm.name === ALARM_NAMES.MIDNIGHT_CHECK) {
     // eslint-disable-next-line no-console
     console.log('Midnight alarm triggered! Checking for new day...')
     checkAndSetNewDate()
@@ -68,7 +77,7 @@ setInterval(async () => {
   // Check if we missed time (system sleep)
   const gap = now - lastSystemCheck.value
 
-  if (gap > 30000) { // More than 30 seconds gap
+  if (gap > TIMING.SYSTEM_SLEEP_THRESHOLD) {
     // End any current session at the last saved time
     endCurrentSession(new Date(lastSystemCheck.value))
   }
@@ -141,9 +150,9 @@ async function saveCurrentSession({ domain, startTime }: { domain: string, start
 function setupMidnightAlarm() {
   const nextMidnightTime = getNextMidnightTimestamp()
 
-  browser.alarms.create('midnightCheck', {
+  browser.alarms.create(ALARM_NAMES.MIDNIGHT_CHECK, {
     when: nextMidnightTime, // Set the first alarm to fire at the precise next midnight
-    periodInMinutes: 24 * 60, // Subsequent alarms will fire exactly 24 hours after the first
+    periodInMinutes: TIMING.DAILY_MINUTES,
   })
 
   // eslint-disable-next-line no-console
