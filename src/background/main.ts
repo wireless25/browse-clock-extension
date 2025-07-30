@@ -92,6 +92,15 @@ async function getActiveTab(): Promise<Tabs.Tab | undefined> {
 }
 
 async function handleTabUpdate({ tabId }: { tabId: number }) {
+  const tab = await browser.tabs.get(tabId)
+  if (!tab.url)
+    return
+
+  const domain = getMainDomain(tab.url, { removeSubdomains: false })
+
+  if (domain === currentTab.value)
+    return
+
   endCurrentSession()
   await startTrackingTab(tabId)
 }
