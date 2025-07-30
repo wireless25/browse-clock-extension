@@ -51,7 +51,16 @@ browser.alarms.onAlarm.addListener((alarm) => {
 browser.tabs.onActivated.addListener(async ({ tabId }) => {
   await handleTabUpdate({ tabId })
 })
-browser.tabs.onUpdated.addListener(async (tabId) => {
+browser.tabs.onUpdated.addListener(async (tabId, { favIconUrl, status }) => {
+  if (favIconUrl) {
+    setFaviconForTab(favIconUrl)
+  }
+
+  if (status !== 'complete') {
+    // eslint-disable-next-line no-console
+    console.log(`Tab ${tabId} is not complete yet, skipping update.`)
+    return
+  }
   await handleTabUpdate({ tabId })
 })
 browser.windows.onFocusChanged.addListener(async (windowId) => {
@@ -172,6 +181,22 @@ async function checkAndSetNewDate() {
   // eslint-disable-next-line no-console
   console.log(`New day detected! Old: ${today.value}, New: ${now}`)
   today.value = now
+}
+
+function setFaviconForTab(favIconUrl: string) {
+  if (!currentTab.value || currentTab.value === 'idle')
+    return
+
+  const startDate = new Date(currentTabStartTime.value).toISOString().split('T')[0]
+
+  if (!timeTrackerData.value.dailyStats[startDate]?.sites[currentTab.value])
+    return
+
+  if (!timeTrackerData.value.dailyStats[startDate].sites[currentTab.value].favicon) {
+    timeTrackerData.value.dailyStats[startDate].sites[currentTab.value].favicon = favIconUrl
+    // eslint-disable-next-line no-console
+    console.log(`Favicon for ${currentTab.value} set to ${favIconUrl}`)
+  }
 }
 
 async function saveSiteTime(domain: string, session: TimeSession) {
