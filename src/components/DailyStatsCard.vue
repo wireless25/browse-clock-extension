@@ -2,23 +2,24 @@
 import { computed } from 'vue'
 import SiteList from './SiteList.vue'
 import StatsChart from './StatsChart.vue'
-import { timeTrackerData, today } from '~/logic/storage'
+import CurrentSiteDetails from './CurrentSiteDetails.vue'
 import type { ChartDataPoint, DailyStats, SiteTimeData, StorageData } from '~/types'
 
-const props = defineProps<{
+const { tabVisitedTime, currentSession, today, dailyStats } = defineProps<{
   tabVisitedTime: string
   currentSession: {
     domain: string
     startTime: string
   } | null
   dailyStats: Record<string, DailyStats>
+  today: string
 }>()
 
-const dayData = computed<StorageData['dailyStats'][typeof today.value]>(() => props.dailyStats[today.value])
+const dayData = computed<StorageData['dailyStats'][typeof today]>(() => dailyStats[today])
 const formattedDate = computed(() => {
-  if (!today.value)
+  if (!today)
     return ''
-  const date = new Date(today.value)
+  const date = new Date(today)
   return date.toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
@@ -107,7 +108,7 @@ function getQuarterlyChartData(dailyStats: Record<string, DailyStats>): ChartDat
 }
 
 function getTodayTopSites(dailyStats: Record<string, DailyStats>, limit = 5): SiteTimeData[] {
-  const todayStats = dailyStats[today.value]
+  const todayStats = dailyStats[today]
 
   if (!todayStats)
     return []
@@ -119,10 +120,10 @@ function getTodayTopSites(dailyStats: Record<string, DailyStats>, limit = 5): Si
 
 const activePeriod = ref<'7D' | '90D'>('7D')
 const chartData = computed(() =>
-  getTimePeriodData(timeTrackerData.value.dailyStats, activePeriod.value),
+  getTimePeriodData(dailyStats, activePeriod.value),
 )
-const topSites = computed(() => getTodayTopSites(timeTrackerData.value.dailyStats, 5))
-const todayTotal = computed(() => Object.values(timeTrackerData.value.dailyStats[new Date().toISOString().split('T')[0]]?.sites || {}).reduce(
+const topSites = computed(() => getTodayTopSites(dailyStats, 5))
+const todayTotal = computed(() => Object.values(dailyStats[new Date().toISOString().split('T')[0]]?.sites || {}).reduce(
   (sum, site) => sum + site.totalTime,
   0,
 ))
@@ -132,7 +133,7 @@ function handlePeriodChange(period: '7D' | '90D') {
 }
 
 // rerender the current session card when the current session changes
-const rerenderKey = computed(() => `${props.currentSession?.domain}-${Date.now()}`)
+const rerenderKey = computed(() => `${currentSession?.domain}-${Date.now()}`)
 </script>
 
 <template>
@@ -146,18 +147,22 @@ const rerenderKey = computed(() => `${props.currentSession?.domain}-${Date.now()
 
     <div class="space-y-4">
       <div>
-        <CurrentSiteDetails :key="rerenderKey" :site="currentSession" :tab-visited-time="tabVisitedTime" />
+        <CurrentSiteDetails
+          :key="rerenderKey"
+          :site="currentSession"
+          :tab-visited-time="tabVisitedTime"
+        />
       </div>
       <div v-if="dayData && Object.keys(dayData.sites).length > 0">
         <h3 class="text-lg text-left font-semibold text-gray-900 dark:text-gray-100">
           Top Sites Today
         </h3>
         <SiteList :sites="topSites" :total-time="todayTotal" />
-        <StatsChart
-          title="Weekly Activity" :chart-data="chartData" :active-period="activePeriod" :periods="['7D', '90D']"
-          @period-change="handlePeriodChange"
-        />
       </div>
+      <StatsChart
+        title="Weekly Activity" :chart-data="chartData" :active-period="activePeriod" :periods="['7D', '90D']"
+        @period-change="handlePeriodChange"
+      />
     </div>
   </div>
 </template>

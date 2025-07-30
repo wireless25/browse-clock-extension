@@ -64,12 +64,9 @@ browser.tabs.onUpdated.addListener(async (tabId, { favIconUrl, status }) => {
     setFaviconForTab(favIconUrl)
   }
 
-  if (status !== 'complete') {
-    // eslint-disable-next-line no-console
-    console.log(`Tab ${tabId} is not complete yet, skipping update.`)
-    return
+  if (status === 'complete') {
+    await handleTabUpdate({ tabId })
   }
-  await handleTabUpdate({ tabId })
 })
 browser.windows.onFocusChanged.addListener(async (windowId) => {
   isChromeFocused.value = windowId !== browser.windows.WINDOW_ID_NONE

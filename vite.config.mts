@@ -24,7 +24,12 @@ export const sharedConfig: UserConfig = {
     __NAME__: JSON.stringify(packageJson.name),
   },
   plugins: [
-    Vue(),
+    Vue({
+      script: {
+        defineModel: true,
+        propsDestructure: true,
+      },
+    }),
 
     AutoImport({
       imports: [
