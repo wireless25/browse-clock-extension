@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { SiteTimeData } from '~/types'
+import { computed } from 'vue'
 
 interface Props {
   sites: SiteTimeData[]

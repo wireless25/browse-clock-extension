@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import SiteList from '../SiteList.vue'
 
 describe('site list component', () => {
@@ -12,12 +12,12 @@ describe('site list component', () => {
             totalTime: 1233,
             sessions: [
               {
-                startTime: '2025-07-24T08:56:14.518Z',
-                endTime: '2025-07-24T08:56:15.751Z',
+                startTime: 1753967876,
+                endTime: 1753967876,
                 duration: 1233,
               },
             ],
-            lastVisited: '2025-07-24T08:56:15.751Z',
+            lastVisited: 1753967876,
             favicon: 'https://www.google.com/s2/favicons?domain=icones.js.org&sz=64',
           },
           {
@@ -25,12 +25,12 @@ describe('site list component', () => {
             totalTime: 1176,
             sessions: [
               {
-                startTime: '2025-07-24T08:56:15.781Z',
-                endTime: '2025-07-24T08:56:16.957Z',
+                startTime: 1753967775,
+                endTime: 1753967785,
                 duration: 1176,
               },
             ],
-            lastVisited: '2025-07-24T08:56:16.957Z',
+            lastVisited: 1753967785,
             favicon: 'https://www.google.com/s2/favicons?domain=sozialinfo.ch&sz=64',
           },
           {
@@ -38,12 +38,12 @@ describe('site list component', () => {
             totalTime: 721,
             sessions: [
               {
-                startTime: '2025-07-24T08:56:16.983Z',
-                endTime: '2025-07-24T08:56:17.704Z',
+                startTime: 1753967776,
+                endTime: 1753967777,
                 duration: 721,
               },
             ],
-            lastVisited: '2025-07-24T08:56:17.704Z',
+            lastVisited: 1753967777,
             favicon: 'https://www.google.com/s2/favicons?domain=nuxt.com&sz=64',
           },
         ],

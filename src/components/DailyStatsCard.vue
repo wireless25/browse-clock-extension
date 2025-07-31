@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import type { ChartDataPoint, DailyStats, SiteTimeData, StorageData } from '~/types'
 import { computed } from 'vue'
+import CurrentSiteDetails from './CurrentSiteDetails.vue'
 import SiteList from './SiteList.vue'
 import StatsChart from './StatsChart.vue'
-import CurrentSiteDetails from './CurrentSiteDetails.vue'
-import type { ChartDataPoint, DailyStats, SiteTimeData, StorageData } from '~/types'
 
 const { tabVisitedTime, today, dailyStats, currentTab } = defineProps<{
   tabVisitedTime: string

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { DailyStats } from '~/types'
+import { computed } from 'vue'
 import { formatDuration, formatTime } from '~/logic/utils'
 
 const { dailyStats } = defineProps<{

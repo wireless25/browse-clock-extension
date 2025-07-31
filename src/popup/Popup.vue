@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { applyTheme, prefersDarkMode } from '~/logic/common-setup'
 import UiButton from '~/components/ui/Button.vue'
+import { applyTheme, prefersDarkMode } from '~/logic/common-setup'
 
 function openOptionsPage() {
   browser.runtime.openOptionsPage()

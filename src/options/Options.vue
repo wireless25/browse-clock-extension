@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { extOptions, timeTrackerData } from '~/logic/storage'
 import Logo from '~/components/Logo.vue'
 import { applyTheme, prefersDarkMode } from '~/logic/common-setup'
+import { extOptions, timeTrackerData } from '~/logic/storage'
 
 // Local state for the switch, synced with extOptions
 const trackLocalhostToggle = ref<boolean>(extOptions.value.trackLocalhost)

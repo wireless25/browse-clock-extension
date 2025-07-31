@@ -1,7 +1,7 @@
-import { describe, expect, it, vi } from 'vitest'
-import { shouldTrackUrl } from '~/logic/utils'
 import type { ExtensionOptions } from '~/types/index'
+import { describe, expect, it, vi } from 'vitest'
 import * as env from '~/env'
+import { shouldTrackUrl } from '~/logic/utils'
 
 describe('shouldTrackUrl', () => {
   const baseOptions: ExtensionOptions = {

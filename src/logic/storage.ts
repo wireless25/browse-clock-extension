@@ -1,5 +1,5 @@
-import { useWebExtensionStorage } from '~/composables/useWebExtensionStorage'
 import type { ExtensionOptions, StorageData } from '~/types/index'
+import { useWebExtensionStorage } from '~/composables/useWebExtensionStorage'
 
 export const { data: timeTrackerData, dataReady: timeTrackerDataReady } = useWebExtensionStorage<StorageData>('timeTrackerData', {
   currentSession: null,

@@ -6,5 +6,5 @@ declare module 'vue' {
   }
 }
 
-// https://stackoverflow.com/a/64189046/479957
+// https://vuejs.org/guide/typescript/options-api.html#type-augmentation-placement
 export {}

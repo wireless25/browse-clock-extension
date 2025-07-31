@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import CurrentSiteDetails from '~/components/CurrentSiteDetails.vue'
 
 describe('current site details component', () => {
