@@ -1,5 +1,6 @@
 import type { ExtensionOptions, StorageData } from '~/types/index'
 import { useWebExtensionStorage } from '~/composables/useWebExtensionStorage'
+import { getLocalISOString } from '~/logic/utils'
 
 export const { data: timeTrackerData, dataReady: timeTrackerDataReady } = useWebExtensionStorage<StorageData>('timeTrackerData', {
   currentSession: null,
@@ -23,4 +24,4 @@ export const { data: extOptions, dataReady: extOptionsReady } = useWebExtensionS
 
 export const { data: lastSystemCheck, dataReady: lastSystemCheckReady } = useWebExtensionStorage<number>('lastSystemCheck', Date.now(), { writeDefaults: true })
 
-export const { data: today, dataReady: todayReady } = useWebExtensionStorage<string>('today', new Date().toISOString().split('T')[0], { writeDefaults: true })
+export const { data: today, dataReady: todayReady } = useWebExtensionStorage<string>('today', getLocalISOString().split('T')[0], { writeDefaults: true })

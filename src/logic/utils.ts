@@ -15,6 +15,25 @@ export function getNextMidnightTimestamp() {
   return nextMidnight.getTime() // Returns timestamp in milliseconds
 }
 
+export function getLocalISOString(timestamp?: number): string {
+  const date = timestamp && !Number.isNaN(timestamp) ? new Date(timestamp) : new Date()
+
+  const year = date.getFullYear()
+  const month = (date.getMonth() + 1).toString().padStart(2, '0') // Months are 0-indexed
+  const day = date.getDate().toString().padStart(2, '0')
+
+  const hours = date.getHours().toString().padStart(2, '0')
+  const minutes = date.getMinutes().toString().padStart(2, '0')
+  const seconds = date.getSeconds().toString().padStart(2, '0')
+  const milliseconds = date.getMilliseconds().toString().padStart(3, '0')
+
+  // To match the structure of toISOString, we'll append 'Z' if it's UTC,
+  // but for local time, we often omit this or use a timezone offset.
+  // For a simple "local ISO-like" string, we'll just concatenate.
+  // If you need the timezone offset included, it gets a bit more complex.
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`
+}
+
 export function getDomainIcon(domain: string): string {
   if (!domain || typeof domain !== 'string')
     return ''

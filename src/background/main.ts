@@ -1,7 +1,7 @@
 import type { Tabs } from 'webextension-polyfill'
 import type { DailyStats, TimeSession } from '../types/index'
 import { currentTab, currentTabStartTime, extOptions, isChromeFocused, lastSystemCheck, timeTrackerData, today } from '~/logic/storage'
-import { getDomainIcon, getMainDomain, getNextMidnightTimestamp, shouldTrackUrl } from '~/logic/utils'
+import { getDomainIcon, getLocalISOString, getMainDomain, getNextMidnightTimestamp, shouldTrackUrl } from '~/logic/utils'
 
 // only on dev mode
 if (import.meta.hot) {
@@ -179,7 +179,7 @@ async function setupMidnightAlarm() {
 }
 
 function checkAndSetNewDate() {
-  const now = new Date().toISOString().split('T')[0]
+  const now = getLocalISOString().split('T')[0]
 
   if (now === today.value)
     return
@@ -207,7 +207,7 @@ function setFaviconForTab(favIconUrl: string) {
   if (!currentTab.value || currentTab.value === 'idle')
     return
 
-  const startDate = new Date(currentTabStartTime.value).toISOString().split('T')[0]
+  const startDate = getLocalISOString(currentTabStartTime.value).split('T')[0]
 
   if (!timeTrackerData.value.dailyStats[startDate]?.sites[currentTab.value])
     return
@@ -268,5 +268,18 @@ function saveSiteTime(domain: string, session: TimeSession) {
 
   if (!timeTrackerData.value.dailyStats[today.value].sites[domain].favicon) {
     timeTrackerData.value.dailyStats[today.value].sites[domain].favicon = getDomainIcon(domain)
+  }
+
+  capHistoryData()
+}
+
+function capHistoryData() {
+  const dailyStats = timeTrackerData.value.dailyStats
+  const dates = Object.keys(dailyStats).sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
+
+  if (dates.length > 20) {
+    const datesToDelete = dates.slice(20)
+    for (const date of datesToDelete)
+      delete dailyStats[date]
   }
 }

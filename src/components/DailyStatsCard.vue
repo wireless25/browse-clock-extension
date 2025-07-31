@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ChartDataPoint, DailyStats, SiteTimeData, StorageData } from '~/types'
 import { computed } from 'vue'
+import { getLocalISOString } from '~/logic/utils'
 import CurrentSiteDetails from './CurrentSiteDetails.vue'
 import SiteList from './SiteList.vue'
 import StatsChart from './StatsChart.vue'
@@ -32,7 +33,7 @@ function getWeeklyChartData(dailyStats: Record<string, DailyStats>): ChartDataPo
   for (let i = 6; i >= 0; i--) {
     const date = new Date(today)
     date.setDate(date.getDate() - i)
-    const dateStr = date.toISOString().split('T')[0]
+    const dateStr = getLocalISOString(date.getTime()).split('T')[0]
 
     const dayStats = dailyStats[dateStr]
     const dayLabel = date.toLocaleDateString('en-US', { weekday: 'short' })
@@ -81,7 +82,7 @@ function getQuarterlyChartData(dailyStats: Record<string, DailyStats>): ChartDat
     for (let day = 0; day < 7; day++) {
       const date = new Date(weekStart)
       date.setDate(date.getDate() + day)
-      const dateStr = date.toISOString().split('T')[0]
+      const dateStr = getLocalISOString(date.getTime()).split('T')[0]
 
       const dayStats = dailyStats[dateStr]
       if (dayStats) {
@@ -95,7 +96,7 @@ function getQuarterlyChartData(dailyStats: Record<string, DailyStats>): ChartDat
     quarterData.push({
       label: `${13 - week}`,
       value: weekTotal,
-      date: weekStart.toISOString().split('T')[0],
+      date: getLocalISOString(weekStart.getTime()).split('T')[0],
     })
   }
 
