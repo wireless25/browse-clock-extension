@@ -1,7 +1,7 @@
 /**
  * @see {@link https://playwright.dev/docs/chrome-extensions Chrome extensions | Playwright}
  */
-import { defineConfig } from '@playwright/test'
+import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
   testDir: './e2e',
@@ -12,4 +12,13 @@ export default defineConfig({
     url: 'http://localhost:3303/popup/main.ts',
     reuseExistingServer: true,
   },
+  projects: [
+    {
+      name: 'chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        channel: 'chromium',
+      },
+    },
+  ],
 })
