@@ -115,11 +115,24 @@ export function useWebExtensionStorage<T>(
 
   async function write() {
     try {
-      await (
-        data.value == null
-          ? storageInterface.removeItem(key)
-          : storageInterface.setItem(key, await serializer.write(data.value))
-      )
+      if (data.value == null) {
+        await storageInterface.removeItem(key)
+        return
+      }
+
+      const serialized = await serializer.write(data.value)
+      const size = new TextEncoder().encode(serialized).length
+
+      // webextension storage has a 5MB limit
+      // https://developer.chrome.com/docs/extensions/reference/api/storage#storage_areas
+      const limit = 4.8 * 1024 * 1024 // 4.8MB
+
+      if (size > limit) {
+        console.warn(`Data for key \`${key}\` exceeds storage limit. Not writing to storage.`)
+        return
+      }
+
+      await storageInterface.setItem(key, serialized)
     }
     catch (error) {
       onError(error)
