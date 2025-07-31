@@ -56,7 +56,8 @@ function handleImageError(event: Event) {
 <template>
   <div class="space-y-3">
     <div
-      v-for="(site, index) in sites" :key="site.domain"
+      v-for="(site, index) in sites"
+      :key="site.domain"
       class="group relative overflow-hidden rounded-xl bg-white py-4 transition-all duration-200 dark:bg-dark"
       :style="{ animationDelay: `${index * 100}ms` }"
     >
@@ -67,10 +68,16 @@ function handleImageError(event: Event) {
           class="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-200 dark:bg-zinc-800"
         >
           <img
-            v-if="site.favicon" :src="site.favicon" :alt="site.domain" class="h-6 w-6 rounded"
+            v-if="site.favicon"
+            :src="site.favicon"
+            :alt="site.domain"
+            class="h-6 w-6 rounded"
             @error="handleImageError"
           >
-          <div v-else class="h-6 w-6 rounded bg-gradient-to-br from-blue-400 to-purple-500" />
+          <div
+            v-else
+            class="h-6 w-6 rounded bg-gradient-to-br from-blue-400 to-purple-500"
+          />
         </div>
 
         <!-- Site Details -->
@@ -93,7 +100,8 @@ function handleImageError(event: Event) {
           <div class="mt-2 w-full bg-gray-100 rounded-full h-2 overflow-hidden">
             <div
               class="h-2 rounded-full transition-all duration-1000 ease-out"
-              :class="getProgressColor(index)" :style="{
+              :class="getProgressColor(index)"
+              :style="{
                 width: `${Math.min((site.totalTime / maxTime) * 100, 100)}%`,
                 transitionDelay: `${index * 150}ms`,
               }"

@@ -53,13 +53,23 @@ prefersDarkMode.addEventListener('change', mql => applyTheme(mql))
           <div
             class="flex items-center justify-between py-3 px-4 bg-gray-50 dark:bg-zinc-800 rounded-md border border-gray-200 dark:border-gray-600"
           >
-            <label for="trackLocalhost" class="text-lg font-normal cursor-pointer text-zinc-800 dark:text-gray-100">
+            <label
+              for="trackLocalhost"
+              class="text-lg font-normal cursor-pointer text-zinc-800 dark:text-gray-100"
+            >
               Track Localhost Traffic
             </label>
-            <label for="trackLocalhost" class="relative inline-flex items-center cursor-pointer">
+            <label
+              for="trackLocalhost"
+              class="relative inline-flex items-center cursor-pointer"
+            >
               <input
-                id="trackLocalhost" v-model="trackLocalhostToggle" type="checkbox" class="sr-only peer"
-                role="switch" :aria-checked="trackLocalhostToggle ? 'true' : 'false'"
+                id="trackLocalhost"
+                v-model="trackLocalhostToggle"
+                type="checkbox"
+                class="sr-only peer"
+                role="switch"
+                :aria-checked="trackLocalhostToggle ? 'true' : 'false'"
               >
               <div
                 class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-500 peer-checked:bg-blue-600"
@@ -81,11 +91,16 @@ prefersDarkMode.addEventListener('change', mql => applyTheme(mql))
           <div class="space-y-4">
             <!-- Allow List -->
             <div class="bg-gray-50 dark:bg-zinc-800 rounded-md p-4 border border-gray-200 dark:border-gray-600">
-              <label for="allowList" class="text-lg font-normal mb-2 block text-zinc-800 dark:text-gray-100">
+              <label
+                for="allowList"
+                class="text-lg font-normal mb-2 block text-zinc-800 dark:text-gray-100"
+              >
                 Allow List
               </label>
               <textarea
-                id="allowList" v-model="allowList" rows="5"
+                id="allowList"
+                v-model="allowList"
+                rows="5"
                 class="w-full p-2 border border-gray-200 dark:border-gray-600 rounded-md bg-white dark:bg-dark text-zinc-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter URLs to allow (one per line, like https://example.com)"
               />
@@ -98,11 +113,16 @@ prefersDarkMode.addEventListener('change', mql => applyTheme(mql))
 
             <!-- Exclude List -->
             <div class="bg-gray-50 dark:bg-zinc-800 rounded-md p-4 border border-gray-200 dark:border-gray-600">
-              <label for="excludeList" class="text-lg font-normal mb-2 block text-zinc-800 dark:text-gray-100">
+              <label
+                for="excludeList"
+                class="text-lg font-normal mb-2 block text-zinc-800 dark:text-gray-100"
+              >
                 Exclude List
               </label>
               <textarea
-                id="excludeList" v-model="excludeList" rows="5"
+                id="excludeList"
+                v-model="excludeList"
+                rows="5"
                 class="w-full p-2 border border-gray-200 dark:border-gray-600 rounded-md bg-white dark:bg-dark text-zinc-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter URLs to allow (one per line, like https://example.com)"
               />
@@ -126,7 +146,10 @@ prefersDarkMode.addEventListener('change', mql => applyTheme(mql))
               <span class="text-lg font-normal text-gray-500 dark:text-gray-500">
                 Clear today's data
               </span>
-              <button class="text-sm text-red-600 dark:text-red-400 hover:underline" @click="clearData">
+              <button
+                class="text-sm text-red-600 dark:text-red-400 hover:underline"
+                @click="clearData"
+              >
                 Clear
               </button>
             </div>

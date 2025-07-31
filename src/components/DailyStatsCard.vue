@@ -152,10 +152,16 @@ const rerenderKey = computed(() => `${currentTab}-${Date.now()}`)
         <h3 class="text-lg text-left font-semibold text-gray-900 dark:text-gray-100">
           Top Sites Today
         </h3>
-        <SiteList :sites="topSites" :total-time="todayTotal" />
+        <SiteList
+          :sites="topSites"
+          :total-time="todayTotal"
+        />
       </div>
       <StatsChart
-        title="Weekly Activity" :chart-data="chartData" :active-period="activePeriod" :periods="['7D', '90D']"
+        title="Weekly Activity"
+        :chart-data="chartData"
+        :active-period="activePeriod"
+        :periods="['7D', '90D']"
         @period-change="handlePeriodChange"
       />
     </div>

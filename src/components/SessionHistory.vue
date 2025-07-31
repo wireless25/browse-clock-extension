@@ -39,7 +39,8 @@ function formatDailyTime(milliseconds: number): string {
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 text-gray-600 transition-transform group-open:rotate-90 dark:text-gray-400"
-            viewBox="0 0 20 20" fill="currentColor"
+            viewBox="0 0 20 20"
+            fill="currentColor"
           >
             <path
               fill-rule="evenodd"
@@ -56,7 +57,8 @@ function formatDailyTime(milliseconds: number): string {
 
       <div class="divide-y divide-gray-100 dark:divide-gray-800">
         <div
-          v-for="day in sortedDays" :key="day.date"
+          v-for="day in sortedDays"
+          :key="day.date"
           class="p-4 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50"
         >
           <details class="group">
@@ -65,7 +67,8 @@ function formatDailyTime(milliseconds: number): string {
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-4 w-4 text-gray-500 transition-transform group-open:rotate-90 dark:text-gray-400"
-                  viewBox="0 0 20 20" fill="currentColor"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
                 >
                   <path
                     fill-rule="evenodd"
@@ -90,7 +93,8 @@ function formatDailyTime(milliseconds: number): string {
 
             <div class="mt-3 ml-6 space-y-3">
               <div
-                v-for="site in Object.values(day.sites).sort((a, b) => b.totalTime - a.totalTime)" :key="site.domain"
+                v-for="site in Object.values(day.sites).sort((a, b) => b.totalTime - a.totalTime)"
+                :key="site.domain"
                 class="group"
               >
                 <div class="flex items-center justify-between">
@@ -104,7 +108,8 @@ function formatDailyTime(milliseconds: number): string {
                 </div>
                 <ul class="mt-2 space-y-1.5 ml-4 border-l-2 border-gray-100 pl-3 dark:border-gray-800">
                   <li
-                    v-for="(session, index) in site.sessions" :key="index"
+                    v-for="(session, index) in site.sessions"
+                    :key="index"
                     class="text-xs text-gray-600 dark:text-gray-400 flex items-center"
                   >
                     <span class="w-1 h-1 rounded-full bg-gray-400 mr-2" />

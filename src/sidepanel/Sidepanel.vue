@@ -22,7 +22,8 @@ prefersDarkMode.addEventListener('change', mql => applyTheme(mql))
   <main class="w-full min-h-dvh px-4 py-5 text-center md:bg-gray-50 dark:bg-dark text-gray-700">
     <div class="mt-2">
       <DailyStatsCard
-        :key="today" :daily-stats="timeTrackerData.dailyStats"
+        :key="today"
+        :daily-stats="timeTrackerData.dailyStats"
         :current-session="timeTrackerData.currentSession"
         :current-tab="currentTab"
         :tab-visited-time="formattedRunningTime"
@@ -32,7 +33,10 @@ prefersDarkMode.addEventListener('change', mql => applyTheme(mql))
     <div class="mt-4">
       <SessionHistory :daily-stats="timeTrackerData.dailyStats" />
     </div>
-    <UiButton class="mt-4" @click="openOptionsPage">
+    <UiButton
+      class="mt-4"
+      @click="openOptionsPage"
+    >
       Open Options
     </UiButton>
   </main>

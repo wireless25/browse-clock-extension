@@ -20,14 +20,25 @@ onMounted(() => {
     <div class="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
     <div class="absolute -bottom-6 -left-6 h-32 w-32 rounded-full bg-white/5" />
 
-    <div v-if="currentTab && currentTab !== 'idle'" class="relative z-10">
+    <div
+      v-if="currentTab && currentTab !== 'idle'"
+      class="relative z-10"
+    >
       <!-- Header -->
       <div class="mb-4 flex items-center justify-between">
         <div class="flex items-center space-x-2">
           <div class="rounded-full bg-white/20 p-1">
             <!-- Live indicator icon -->
-            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-              <circle cx="10" cy="10" r="3" />
+            <svg
+              class="h-4 w-4"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <circle
+                cx="10"
+                cy="10"
+                r="3"
+              />
             </svg>
           </div>
           <span class="text-sm font-medium opacity-90">Currently Active</span>
@@ -47,7 +58,12 @@ onMounted(() => {
       <div class="flex items-center space-x-4">
         <!-- Favicon with enhanced styling -->
         <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
-          <img v-if="faviconUrl" :src="faviconUrl" alt="Favicon" class="h-8 w-8 rounded-lg">
+          <img
+            v-if="faviconUrl"
+            :src="faviconUrl"
+            alt="Favicon"
+            class="h-8 w-8 rounded-lg"
+          >
         </div>
 
         <!-- Site Details -->
@@ -83,12 +99,22 @@ onMounted(() => {
     </div>
 
     <!-- No active session state -->
-    <div v-else class="relative z-10 text-center py-0.5">
+    <div
+      v-else
+      class="relative z-10 text-center py-0.5"
+    >
       <div class="mb-4">
         <div class="mx-auto h-14 w-14 rounded-2xl bg-white/20 flex items-center justify-center">
-          <svg class="h-8 w-8 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            class="h-8 w-8 opacity-60"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
-              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
               d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
