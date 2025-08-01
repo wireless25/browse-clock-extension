@@ -11,6 +11,7 @@ const { tabVisitedTime, today, dailyStats, currentTab } = defineProps<{
   dailyStats: Record<string, DailyStats>
   today: string
   currentTab: string
+  showOnlyTopSites?: boolean
 }>()
 
 const dayData = computed<StorageData['dailyStats'][typeof today]>(() => dailyStats[today])
@@ -142,7 +143,7 @@ const rerenderKey = computed(() => `${currentTab}-${Date.now()}`)
     </div>
 
     <div class="space-y-4">
-      <div>
+      <div v-if="!showOnlyTopSites">
         <CurrentSiteDetails
           :key="rerenderKey"
           :current-tab="currentTab || 'idle'"
@@ -159,6 +160,7 @@ const rerenderKey = computed(() => `${currentTab}-${Date.now()}`)
         />
       </div>
       <StatsChart
+        v-if="!showOnlyTopSites"
         title="Weekly Activity"
         :chart-data="chartData"
         :active-period="activePeriod"

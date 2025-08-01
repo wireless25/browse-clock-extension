@@ -160,7 +160,7 @@ prefersDarkMode.addEventListener('change', mql => applyTheme(mql))
       <div
         class="p-6 border-t border-gray-200 dark:border-gray-600 text-center text-sm text-gray-500 dark:text-gray-500"
       >
-        <p>2025 TabTimeTracker</p>
+        <p>2025 BrowswClock</p>
       </div>
     </div>
   </main>
