@@ -41,6 +41,7 @@ export async function getManifest() {
       'idle',
       'windows',
       'alarms',
+      'unlimitedStorage',
     ],
     content_security_policy: {
       extension_pages: isDev
